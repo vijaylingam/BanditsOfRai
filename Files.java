@@ -8,6 +8,7 @@ import java.lang.String;
 public class Files {
 
     int files = 0;
+    static String[] TYPES = new String[]{"jpg", "png", "gif", "mp4", "mp3", "exe", "psd", "html", "xml"}; //this list can be extended by adding in new strings of extensions
     public void printFandD(File cwd){ //method to print files and directories
     	int filecount = 0;
     	int recursivefcount;
@@ -51,12 +52,43 @@ public class Files {
        return files;
     }
 
+    public void extension(File cwd){
+        for(String ext: TYPES){
+            int count = 0;
+            for(File file: cwd.listFiles()) {
+                if (file.isFile()) {
+                    if (file.toString().endsWith(ext)) { //using .endsWith() method to check if the selected files extension matches with the variable 'ext'
+                        count += 1;
+                    }
+                } else {
+                    count += extrecurse(file, ext); //extrecurse refers to external recursive method.
+                }
+            }
+            System.out.println(ext +"  -  "+count); 
+        }
+    }
+
+  public int extrecurse(File directory, String extension){ 
+        int count = 0;
+        for(File file: directory.listFiles()) {
+            if (!file.isDirectory()) {
+            if (file.toString().toLowerCase().endsWith(extension)) { //converting the file path to string first and then converting it to lower case and extracting the extension
+                count += 1;
+            }
+        }
+            else{
+                count += extrecurse(file, extension); //recursive call
+            }
+        }
+        return count;
+    }
     
     public static void main(String[] args) {
         Files start = new Files();
         String currentdirectory = "/Users/vijaychandra/Desktop/test"; //current directory is set to working directory
         File directory = new File(currentdirectory);
         start.printFandD(directory);
+        start.extension(directory);
     }
 
     }
