@@ -55,25 +55,28 @@ public class Files {
     public void extension(File cwd){
         for(String ext: TYPES){
             int count = 0;
+            long size = 0;
             for(File file: cwd.listFiles()) {
                 if (file.isFile()) {
-                    if (file.toString().endsWith(ext)) { //using .endsWith() method to check if the selected files extension matches with the variable 'ext'
+                    if (file.toString().toLowerCase().endsWith(ext)) {
                         count += 1;
+                        size = size + file.length();
                     }
                 } else {
-                    count += extrecurse(file, ext); //extrecurse refers to external recursive method.
+                    count += extrecurse(file, ext);
+                    size += extrecursesize(file, ext);
                 }
             }
-            System.out.println(ext +"  -  "+count); 
+            System.out.println(ext +"  -  "+count+" "+ String.format("%,d", size));
         }
     }
 
-  public int extrecurse(File directory, String extension){ 
+    public int extrecurse(File directory, String extension){ 
         int count = 0;
         for(File file: directory.listFiles()) {
             if (!file.isDirectory()) {
             if (file.toString().toLowerCase().endsWith(extension)) { //converting the file path to string first and then converting it to lower case and extracting the extension
-                count += 1;
+               count += 1;
             }
         }
             else{
@@ -82,13 +85,32 @@ public class Files {
         }
         return count;
     }
+
+    public int extrecursesize(File directory, String extension){ // external method to calculating the size recursively
+        long size = 0;
+        for(File file: directory.listFiles()){
+            if (!file.isDirectory()) {
+                if (file.toString().toLowerCase().endsWith(extension)) {
+                    size += file.length();
+                }
+            }
+            else{
+                size += extrecursesize(file, extension);
+            }
+        }
+        return (int) size; //converting long to integer type
+    }
     
     public static void main(String[] args) {
+        long starttime = System.currentTimeMillis(); //long integer to save the timestamp when the program starts
         Files start = new Files();
-        String currentdirectory = "/Users/vijaychandra/Desktop/test"; //current directory is set to working directory
+        String currentdirectory = "/Users/vijaychandra/Desktop/test"; //change the directory here
         File directory = new File(currentdirectory);
         start.printFandD(directory);
         start.extension(directory);
+        long terminationtime = System.currentTimeMillis(); //variable storing the time stamp when the program terminates
+        long executiontime = terminationtime - starttime;  
+        System.out.printf("Program executed in %d milliseconds.\n", executiontime);
     }
 
     }
