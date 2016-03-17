@@ -10,20 +10,22 @@ public class Files {
     int files = 0;
     public void printFandD(File cwd){ //method to print files and directories
     	int filecount = 0;
+    	int recursivefcount;
         for(File file: cwd.listFiles()){ //cwd here is the variable denoting current working directory
             if (file.isFile()) {
 
-                System.out.println("0   " + "f   " + file); 
+                System.out.println("0   0   " + "f   " + file); 
             } 
             else {
                 filecount = fileCounter(file); //recursive call to filecounter method
-                System.out.println(filecount + "	d   " + file);
+                recursivefcount = recursiveFileCounter(file);
+                System.out.println(recursivefcount+"    "+filecount + "  d   " + file);
                 printFandD(file);
             }
         }
     }
 
-    public int fileCounter(File cwd){
+    public int fileCounter(File cwd){ //method to walk through files directly under the current folder
         files = 0;
         for(File file: cwd.listFiles()){
             if(file.isFile()){ //checks whether the selection is a file and returns appropriate boolean value
@@ -33,7 +35,20 @@ public class Files {
                 files += 0;
             }
         }
-        return files;
+        return files; 
+    }
+
+    public int recursiveFileCounter(File cwd){ //method to recursively count the number of files under a directory
+        files = 0;
+        for(File file: cwd.listFiles()){
+            if(file.isFile()){
+                files+=1;
+            }
+            else{
+                files += fileCounter(file); //recursive call to fileCounter method
+            }
+        }
+       return files;
     }
 
     
