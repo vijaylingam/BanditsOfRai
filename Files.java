@@ -4,15 +4,17 @@
 
 import java.io.File; //APIs declaration
 import java.lang.String;
-
 public class Files {
-
-    int files = 0;
     static String[] TYPES = new String[]{"jpg", "png", "gif", "mp4", "mp3", "exe", "psd", "html", "xml"}; //this list can be extended by adding in new strings of extensions
-    public void printFandD(File cwd){ //method to print files and directories
+    /**
+	* printFandD method takes in the paramater cwd, which is the current working directory, and prints out: the number of files recurvsively under a folder by calling 
+	* recursiveFileCounter method, number of files directly under a folder by calling on the fileCounter method, 'f' followed by the directory path if its a file or
+	* d followed by the directory path if its a folder. This method does not return anything.
+	*/
+    public void printFandD(File cwd){ 
     	int filecount = 0;
     	int recursivefcount;
-        for(File file: cwd.listFiles()){ //cwd here is the variable denoting current working directory
+        for(File file: cwd.listFiles()){ 
             if (file.isFile()) {
 
                 System.out.println("0   0   " + "f   " + file); 
@@ -25,11 +27,14 @@ public class Files {
             }
         }
     }
-
-    public int fileCounter(File cwd){ //method to walk through files directly under the current folder
-        files = 0;
+    /**
+    * fileCounter function takes in cwd (current working directory) as the paramater, and is invoked by printFandD method. It runs through through the folder and
+    * returns the number of files directly under a folder and this count is saved in the variable 'filecount' in the printFandD method.
+    */
+    public int fileCounter(File cwd){ 
+        int files = 0;
         for(File file: cwd.listFiles()){
-            if(file.isFile()){ //checks whether the selection is a file and returns appropriate boolean value
+            if(file.isFile()){ //checks whether the current selection is a file and returns appropriate boolean value.
                 files+=1;
             }
             else{
@@ -38,9 +43,12 @@ public class Files {
         }
         return files; 
     }
-
-    public int recursiveFileCounter(File cwd){ //method to recursively count the number of files under a directory
-        files = 0;
+    /**
+    * recursiveFileCounter function takes cwd (current working directory) as a parameter, and is invoked by printFandD method. It recursively goes through the folder and returns
+    * the total number of files under a folder. This count is saved in the variable 'recursivefcount' in the printFandD method.
+    */
+    public int recursiveFileCounter(File cwd){ 
+        int files = 0;
         for(File file: cwd.listFiles()){
             if(file.isFile()){
                 files+=1;
@@ -51,7 +59,10 @@ public class Files {
         }
        return files;
     }
-
+    /**
+    * extension method takes cwd (current working directory) as the paramater and is invoked by the main method. It invokes the extrecuse and extrecursesize functions
+    * and prints out the statistics of each kind of extension along with their size. This method does not return anything.
+    */
     public void extension(File cwd){
         for(String ext: TYPES){
             int count = 0;
@@ -67,10 +78,13 @@ public class Files {
                     size += extrecursesize(file, ext);
                 }
             }
-            System.out.println(ext +"  -  "+count+" "+ String.format("%,d", size));
+            System.out.println(ext +"  -  "+count+" "+ String.format("%,d", size)); //%,d places comma after every 3 digits in the size variable. 
         }
     }
-
+    /**
+    * extrecurse (external recursion) function takes directory and extension as paramaters which are of the type File and String. This function returns the count of
+    * file type of the given extension.
+    */
     public int extrecurse(File directory, String extension){ 
         int count = 0;
         for(File file: directory.listFiles()) {
@@ -85,7 +99,10 @@ public class Files {
         }
         return count;
     }
-
+    /**
+    * extrecursesize (external recursion for size) takes in 'directory' and 'extension' as parameters and returns the variable 'size', which is the total size of files
+    * of a certain extension in bytes.
+    */
     public int extrecursesize(File directory, String extension){ // external method to calculating the size recursively
         long size = 0;
         for(File file: directory.listFiles()){
@@ -100,7 +117,6 @@ public class Files {
         }
         return (int) size; //converting long to integer type
     }
-    
     public static void main(String[] args) {
         long starttime = System.currentTimeMillis(); //long integer to save the timestamp when the program starts
         Files start = new Files();
@@ -112,6 +128,5 @@ public class Files {
         long executiontime = terminationtime - starttime;  
         System.out.printf("Program executed in %d milliseconds.\n", executiontime);
     }
-
-    }
+}
 
